@@ -100,10 +100,10 @@ def post_search(request):
         if form.is_valid():
             Query = form.cleaned_data['Query']
             c = form.cleaned_data['Category']
-            if c:
+            if c is not None:
                 query &= Q(category=c)
-            if Query:
-                query &= Q(title__contains=Query)
+            if Query is not None:
+                query &= Q(title__icontains=Query)
 
             results = Post.newmanager.filter(query)
 
