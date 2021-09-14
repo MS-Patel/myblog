@@ -69,7 +69,7 @@ class CatListView(ListView):
 
 
 def category_list(request):
-    category_list = Category.objects.exclude(name='default')
+    category_list = Category.objects.exclude(name='all')
     context = {
         "category_list": category_list,
     }
