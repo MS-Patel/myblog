@@ -8,8 +8,10 @@ from mptt.models import MPTTModel, TreeForeignKey
 
 # Create your models here.
 
+
 def user_directory_path(instance, filename):
     return 'post/{0}/{1}'.format(instance.id, filename)
+
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -20,7 +22,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Post (models.Model):
 
     class Newmanager(models.Manager):
@@ -28,17 +31,20 @@ class Post (models.Model):
             return super().get_queryset().filter(status='published')
 
     options = (
-        ('draft','Draft'),
-        ('published','Published'),
+        ('draft', 'Draft'),
+        ('published', 'Published'),
     )
 
     title = models.CharField(max_length=250)
     category = models.ForeignKey(Category, on_delete=models.PROTECT, default=1)
-    excerpt = models.TextField(max_length=250,default='Short few words about the post')
+    excerpt = models.TextField(
+        max_length=250, default='Short few words about the post')
     slug = models.SlugField(max_length=250, unique_for_date='publish')
     publish = models.DateTimeField(default=timezone.now)
-    author = models.ForeignKey (User, on_delete=models.CASCADE, related_name='blog_posts')
-    image = models.ImageField(upload_to=user_directory_path, default='post/default.jpg')
+    author = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='blog_posts')
+    image = models.ImageField(
+        upload_to=user_directory_path, default='post/default.jpg')
     content = models.TextField()
     status = models.CharField(max_length=10, choices=options, default='draft')
     objects = models.Manager()
@@ -53,11 +59,12 @@ class Post (models.Model):
     def __str__(self):
         return self.title
 
+
 class Comment(MPTTModel):
-    
-    post = models.ForeignKey (Post,
-                            on_delete=models.CASCADE,
-                            related_name='comments')
+
+    post = models.ForeignKey(Post,
+                             on_delete=models.CASCADE,
+                             related_name='comments')
     parent = TreeForeignKey('self',
                             on_delete=models.CASCADE,
                             null=True,
@@ -71,6 +78,6 @@ class Comment(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['publish']
-        
+
     def __str__(self):
         return f"Comment by {self.name}"

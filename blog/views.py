@@ -92,8 +92,8 @@ def post_search(request):
 
             data = serializers.serialize('json', list(
                 search_string), fields=('id', 'title', 'slug'))
-            
-            return JsonResponse({'search_string':data})
+
+            return JsonResponse({'search_string': data})
 
     if 'Query' in request.GET:
         form = PostSearchForm(request.GET)
